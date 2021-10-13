@@ -1,6 +1,6 @@
 {
   "name": "Youtubeの動画情報からカレンダー作成しようとするやつ",
-  "version": "2021.3.23",
+  "version": "2021.10.13",
   "manifest_version": 2,
   "description": "Youtubeの動画情報からGoogleカレンダー作成するときにちょっとだけ便利な拡張機能。Youtubeのタイトルとリンクを自動で書いてくれます。",
   "icons": {
