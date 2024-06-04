@@ -1,30 +1,31 @@
-chrome.browserAction.onClicked.addListener((activeTab) => {
-  chrome.tabs.executeScript({
-    file: 'action.js'
+chrome.action.onClicked.addListener((tab) => {
+  chrome.scripting.executeScript({
+    target: {tabId: tab.id},
+    files: ["action.js"]
   });
 });
 
-chrome.tabs.onActivated.addListener((tabId, cinfo, tab) => {
-  chrome.tabs.getSelected(null, (tab) => { 
-    switchIconStatus(tab.url);
-  });
+chrome.tabs.onActivated.addListener(async (tabId, cinfo, tab) => {
+  const [targetTab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+  await switchIconStatus(targetTab);
 });
 
  
-chrome.tabs.onUpdated.addListener((tabId, cinfo, tab) => {
-  switchIconStatus(tab.url);
+chrome.tabs.onUpdated.addListener(async (tabId, cinfo, tab) => {
+  const [targetTab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+  await switchIconStatus(tab);
 });
-
-function switchIconStatus(url) {
-  if (isMoviePage(url)) {
-    chrome.browserAction.enable();
-    chrome.browserAction.setIcon({path: "img/16.png"});
-  } else {
-    chrome.browserAction.disable();
-    chrome.browserAction.setIcon({path: "img/16-disabled.png"});
-  }
-}
 
 function isMoviePage(url) {
   return /.*:\/\/(www.)youtube.com\/watch\?.*/.test(url);
+}
+
+async function switchIconStatus(tab) {
+  if (isMoviePage(tab.url)) {
+    chrome.action.enable(tab.id);
+    chrome.action.setIcon({path: "img/16.png"});
+  } else {
+    chrome.action.disable(tab.id);
+    chrome.action.setIcon({path: "img/16-disabled.png"});
+  }
 }
