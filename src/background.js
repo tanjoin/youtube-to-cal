@@ -20,8 +20,12 @@ function isMoviePage(url) {
   return /.*:\/\/(www.)youtube.com\/watch\?.*/.test(url);
 }
 
+function isLivePage(url) {
+  return /https:\/\/www.youtube.com\/live\/.*/.test(url);
+}
+
 async function switchIconStatus(tab) {
-  if (isMoviePage(tab.url)) {
+  if (isMoviePage(tab.url) || isLivePage(tab.url)) {
     chrome.action.enable(tab.id);
     chrome.action.setIcon({path: "img/16.png"});
   } else {
