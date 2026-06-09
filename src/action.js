@@ -5,9 +5,10 @@ function openCal() {
       // デフォルトのイベント時間（2時間）
       const DEFAULT_EVENT_DURATION = 2;
       
-      // 設定からイベント時間を取得
+      // 設定からイベント時間とカレンダーIDを取得
       chrome.storage.sync.get({
-        eventDuration: DEFAULT_EVENT_DURATION
+        eventDuration: DEFAULT_EVENT_DURATION,
+        calendarId: ''
       }, function(items) {
         const BASE_URL = "https://www.google.com/calendar/render?action=TEMPLATE&text=";
         const AND_LOCATION = "&location=";
@@ -43,6 +44,12 @@ function openCal() {
                   AND_LOCATION + encodeURIComponent(YOUTUBE_URL) + 
                   AND_DATES + DATE + 
                   ESCAPE_SLASH + END_DATE;
+        
+        // calendarIdが設定されている場合は、URLパラメータに追加
+        if (items.calendarId) {
+          url += "&src=" + encodeURIComponent(items.calendarId);
+        }
+        
         open(url, "_blank");
       });
     }
